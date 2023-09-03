@@ -1,5 +1,8 @@
 <?php
 
+// Ici j'inclus le fichier autoload.php car c'est grâce à ce fichier que je vais pouvoir inclure TOUTES mes dépendances composer (donc ce qu'il y a dans le dossier vendor)
+require_once __DIR__ . "/../vendor/autoload.php";
+
 // On inclus le controller pour pouvoir l'utiliser
 require_once __DIR__ . "/../app/Controllers/MainController.php";
 require_once __DIR__ . "/../app/Controllers/CatalogController.php";
@@ -28,37 +31,61 @@ if (!empty($_GET['_url'])) {
 // En clé, on aura un élément qu'on s'attend à voir dans l'URL
 // En valeur, on aura le chemin à appeler selon cette fameuse URL (Controller et méthode du Controller)
 
-/////////////////////////////// LA ROUTE
-$routes = [
-    '/' => [
-        'controller' => 'MainController',
+// Je créer une instance de AltoRouter (la librairie que j'ai installé)
+$router = new AltoRouter();
+
+// dump($_SERVER['BASE_URI']);
+
+// On fournit à AltoRouter la partie de l'URL à ne pa sprendre en compte pour faire la comparaison entre l'URL courante et l'url de la route
+// LA valeur de $_SERVER['BASE_URI'] est donnée par le fichier .htaccess. Elle correspond au chemin de la racine du site, ici se termine par public
+$router->setBasePath($_SERVER['BASE_URI']);
+
+// Ci dessous je map (mapping) la route '/'
+// $router->map(
+//     'GET', // la méthode HTTP qui est autorisée
+//     '/', // l'url à laquelle cette route réagit
+//     [ // la clé target qui va stocker le nom de la method 'action' et le nom du controller 'MainController')
+//         'controller' => 'MainController', // Nom du controller
+//         'action' => 'home' // Nom de la methode
+//     ],
+//     'home' // On nomme notre route
+// );
+
+// // Ci dessous je map (mapping) la route '/category'
+// $router->map(
+//     'GET', // la méthode HTTP qui est autorisée
+//     '/catalogue/categorie/[i:id]', // l'url à laquelle cette route réagit
+//     [ // la clé target qui va stocker le nom de la method 'action' et le nom du controller 'CatalogController')
+//         'controller' => 'CatalogController', // Nom du controller
+//         'action' => 'category' // Nom de la methode
+//     ],
+//     'catalog-category' // On nomme notre route
+// );
+
+$router->addRoutes(array(
+    array('GET','/', [
+        'controller' => 'MainController', 
         'action' => 'home'
-    ],
-    '/category' => [
+    ], 'home'),
+    array('GET','/catalogue/categorie/[i:id]', [
         'controller' => 'CatalogController',
         'action' => 'category'
-    ]
-];
+    ], 'catalog-category')
+  ));
 
-// Si la page qu'on demande dans l'URL correspond à une des pages de notre liste de routes
-// Alors on appelera la bonne méthode.
-// Sinon erreur 404.
-if (!empty($routes[$currentPage])) {
-    /////////////////////////////// LE ROUTEUR
-    $currentRoute = $routes[$currentPage];
+// Ici on check si la route sur laquelle on est a bien été mappé
+$match = $router->match();
+// dump($match);
 
-    // Ici controller est un objet => une instance de la classe associé a $routes[$currentPage]["controller"]
-    $controller = new $currentRoute["controller"]();
-
-    // On récupère le nom de la méthode associée à notre route
-    $methodName = $currentRoute["action"];
-
-    // PHP modifie en premier la variable par sa valeur, puis exécute l'action
-    // En mettant le $ devant le nom de "method", PHP sait qu'il doit
-    // récupérer la valeur de celle-ci avant d'exécuter
-    /////////////////////////////// LE DISPATCHER
-    $controller->$methodName();
-} else {
-    $controller = new ErrorController();
-    $controller->error404();
+// Pour vérifier si la route existe bien
+if ($match) { // Ici je verifie si $match n'est pas = false
+    // On rentre dans le if que si la route existe bel et bien
+    // Ci dessous je stock dans $controllerToUse le nom du controller dont j'ai besoin pour la route demandée
+    $controllerToUse = $match['target']['controller'];
+    $methodToUse = $match['target']['action'];
+    // Maintenant qu'on a récupéré le nom de la methode ainsi que le nom du controller, on va devoir executer la méthode qui est dans le controller
+    // Pour se faire, on va devoir créer une instance du contrller
+    $controller = new $controllerToUse(); // $controller est une instance de la classe souhaité (par exemple MainController)
+    // Maintenant on va executer la methode $methodToUse
+    $controller->$methodToUse($match['params']);
 }

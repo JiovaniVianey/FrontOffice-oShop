@@ -5,13 +5,17 @@ class CatalogController
     /**
      * Affiche la page Catégories
      */
-    public function category()
+    public function category($params)
     {
-        $this->show('category');
+        dump($params);
+        $this->show('category', [
+            'categoryId' => $params['id']
+        ]);
     }
 
     /**
      * Fonction qui permet d'afficher la vue
+     * $viewData = les données que je veux récupérer dans ma vue
      */
     public function show($viewName, $viewData = [])
     {
