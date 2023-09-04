@@ -7,6 +7,12 @@ require_once __DIR__ . "/../vendor/autoload.php";
 require_once __DIR__ . "/../app/Controllers/MainController.php";
 require_once __DIR__ . "/../app/Controllers/CatalogController.php";
 
+require_once __DIR__ . "/../app/utils/Database.php";
+require_once __DIR__ . "/../app/models/Brand.php";
+require_once __DIR__ . "/../app/models/Product.php";
+require_once __DIR__ . "/../app/models/Category.php";
+require_once __DIR__ . "/../app/models/Type.php";
+
 // Je créer une instance de AltoRouter (la librairie que j'ai installé)
 $router = new AltoRouter();
 
