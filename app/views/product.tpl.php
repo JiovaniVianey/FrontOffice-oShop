@@ -1,0 +1,1 @@
+<h1>Product numero <?=$viewData['productId']?></h1>

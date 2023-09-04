@@ -6,9 +6,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="<?=$baseRoute?>/css/bootstrap.min.css">
-  <link rel="stylesheet" href="<?=$baseRoute?>/css/font-awesome.min.css">
-  <link rel="stylesheet" href="<?=$baseRoute?>/css/styles.css">
+  <link rel="stylesheet" href="<?=$absoluteURL?>/css/bootstrap.min.css">
+  <link rel="stylesheet" href="<?=$absoluteURL?>/css/font-awesome.min.css">
+  <link rel="stylesheet" href="<?=$absoluteURL?>/css/styles.css">
   <title>oShop</title>
 </head>
 

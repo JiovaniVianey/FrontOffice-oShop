@@ -14,10 +14,19 @@ class MainController
     }
 
     /**
+     * Show legal mentions page
+     */
+    public function legalMentions()
+    {
+        $this->show('mentions');
+    }
+
+    /**
      * Fonction qui permet d'afficher la vue
      */
     public function show($viewName, $viewData = [])
     {
+        $absoluteURL = $_SERVER['BASE_URI'];
         require_once __DIR__ . "/../views/partials/header.tpl.php";
         require_once __DIR__ . "/../views/$viewName.tpl.php";
         require_once __DIR__ . "/../views/partials/footer.tpl.php";
