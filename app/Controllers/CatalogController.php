@@ -1,6 +1,6 @@
 <?php
 
-class CatalogController
+class CatalogController extends CoreController
 {
     /**
      * Affiche la page Catégories
@@ -9,6 +9,7 @@ class CatalogController
     {
         // dump() affiche les données de $params
         dump($params);
+
         $this->show('category', [
             'categoryId' => $params['id']
         ]);
@@ -45,22 +46,15 @@ class CatalogController
      *
      * @param [type] $params => valeurs dynamique passées à l'url (id)
      */
-    public function product($toto)
+    public function product($params)
     {
-        $this->show('product', [
-            'productId' => $toto['id']
-        ]);
-    }
+        // On va récupérer la liste de tous nos produits
+        // On va se servir de notre model Product
+        // On stock dans $products tous les produits présent en bdd
+        // dump($products);
 
-    /**
-     * Fonction qui permet d'afficher la vue
-     * $viewData = les données que je veux récupérer dans ma vue
-     */
-    public function show($viewName, $viewData = [])
-    {
-        $absoluteURL = $_SERVER['BASE_URI'];
-        require_once __DIR__ . "/../views/partials/header.tpl.php";
-        require_once __DIR__ . "/../views/$viewName.tpl.php";
-        require_once __DIR__ . "/../views/partials/footer.tpl.php";
+        $this->show('product', [
+            'productId' => $params['id']
+        ]);
     }
 }

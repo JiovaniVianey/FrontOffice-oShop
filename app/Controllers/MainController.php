@@ -1,7 +1,16 @@
 <?php
 
-class MainController
+class MainController extends CoreController
 {
+    public function test()
+    {
+        $brandModel = new Brand(); // peut modifier Brand avec les autres nom de model pour tester
+        $list = $brandModel->findAll();
+        $elem = $brandModel->find(7);
+        dump($list);
+        dump($elem);
+    }
+
     /**
      * Affiche la page d'accueil du site
      */
@@ -19,16 +28,5 @@ class MainController
     public function legalMentions()
     {
         $this->show('mentions');
-    }
-
-    /**
-     * Fonction qui permet d'afficher la vue
-     */
-    public function show($viewName, $viewData = [])
-    {
-        $absoluteURL = $_SERVER['BASE_URI'];
-        require_once __DIR__ . "/../views/partials/header.tpl.php";
-        require_once __DIR__ . "/../views/$viewName.tpl.php";
-        require_once __DIR__ . "/../views/partials/footer.tpl.php";
     }
 }

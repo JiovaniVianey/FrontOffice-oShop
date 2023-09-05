@@ -3,15 +3,20 @@
 // Ici j'inclus le fichier autoload.php car c'est grâce à ce fichier que je vais pouvoir inclure TOUTES mes dépendances composer (donc ce qu'il y a dans le dossier vendor)
 require_once __DIR__ . "/../vendor/autoload.php";
 
+// On inclus la BDD
+require_once __DIR__ . "/../app/utils/Database.php";
+
+// On inclus les models
+require_once __DIR__ . "/../app/Models/CoreModel.php";
+require_once __DIR__ . "/../app/Models/Brand.php";
+require_once __DIR__ . "/../app/Models/Product.php";
+require_once __DIR__ . "/../app/Models/Category.php";
+require_once __DIR__ . "/../app/Models/Type.php";
+
 // On inclus le controller pour pouvoir l'utiliser
+require_once __DIR__ . "/../app/Controllers/CoreController.php";
 require_once __DIR__ . "/../app/Controllers/MainController.php";
 require_once __DIR__ . "/../app/Controllers/CatalogController.php";
-
-require_once __DIR__ . "/../app/utils/Database.php";
-require_once __DIR__ . "/../app/models/Brand.php";
-require_once __DIR__ . "/../app/models/Product.php";
-require_once __DIR__ . "/../app/models/Category.php";
-require_once __DIR__ . "/../app/models/Type.php";
 
 // Je créer une instance de AltoRouter (la librairie que j'ai installé)
 $router = new AltoRouter();
@@ -21,32 +26,32 @@ $router = new AltoRouter();
 $router->setBasePath($_SERVER['BASE_URI']); // Je définis le chemin de base => ce par quoi mes routes vont commencer (localhost/.../public)
 
 // Ici, je créer mes routes (https://altorouter.com/usage/mapping-routes.html)
-$router->addRoutes(array( 
-    array('GET','/', [
+$router->addRoutes(array(
+    array('GET', '/', [
         'controller' => 'MainController', // Dans quel controller ?
         'action' => 'home' // Quelle méthode dans ce controller ?
     ], 'home'),
-    array('GET','/mentions-legales', [
+    array('GET', '/mentions-legales', [
         'controller' => 'MainController',
         'action' => 'legalMentions'
     ], 'legal-mentions'),
-    array('GET','/catalogue/categorie/[i:id]', [
+    array('GET', '/catalogue/categorie/[i:id]', [
         'controller' => 'CatalogController',
         'action' => 'category'
     ], 'catalog-category'),
-    array('GET','/catalogue/type/[i:id]', [
+    array('GET', '/catalogue/type/[i:id]', [
         'controller' => 'CatalogController',
         'action' => 'type'
     ], 'catalog-type'),
-    array('GET','/catalogue/marque/[i:id]', [
+    array('GET', '/catalogue/marque/[i:id]', [
         'controller' => 'CatalogController',
         'action' => 'brand'
     ], 'catalog-brand'),
-    array('GET','/catalogue/produit/[i:id]', [
+    array('GET', '/catalogue/produit/[i:id]', [
         'controller' => 'CatalogController',
         'action' => 'product'
     ], 'catalog-product')
-  ));
+));
 
 // Ici on check si la route sur laquelle on est a bien été mappé
 // doc : https://altorouter.com/usage/matching-requests.html

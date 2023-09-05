@@ -254,4 +254,27 @@ class Product
 
         return $result;
     }
+
+    /**
+     * Retourne un produit avec un type spécifique via son id dans la BDD
+     *
+     * @param int $id
+     *
+     * @return Product[]
+     */
+    public function findBrand($id)
+    {
+        $pdo = Database::getPDO();
+
+        $sql = "SELECT * FROM product WHERE brand_id = $id";
+
+        $pdoStatement = $pdo->query($sql);
+        if ($pdoStatement === false) {
+            exit("Problème lors de la récupération du produit n°$id");
+        }
+
+        $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'Product');
+
+        return $result;
+    }
 }

@@ -1,112 +1,63 @@
 <?php
 
 /**
- * Model servant à gérer les marques
+ * Model Brand => lié à la table brand en bdd
  */
-class Brand
+class Brand extends CoreModel
 {
-    /** @var int Identifiant unique de ma marque */
-    private $id;
-
-    /** @var string */
     private $name;
 
-    /** @var string Date de création au format Y-m-d H:i:s */
-    private $created_at;
-
-    /** @var string Date de modification au format Y-m-d H:i:s */
-    private $updated_at;
-
     /**
-     * Retourne l'id de la marque
-     *
-     * @return int
+     * Récupère toutes les marques (table brand) depuis la bdd
+     * Retourne une liste d'objet (instances de la classe Brand => le model ou on est)
      */
-    public function getId()
+    public function findAll()
     {
-        return $this->id;
+        $sql = "SELECT * FROM brand";
+        $pdo = Database::getPDO();
+        $pdoStatement = $pdo->query($sql);
+        $products = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'Brand');
+
+        return $products;
     }
 
     /**
-     * Permet de remplir l'id de la marque
-     *
-     * @param int $id
-     *
-     * @return $this
+     * Récupère un seul produit en fonction de son id
+     * Retourne un objet (une instance de la classe Brand => le model ou on est)
      */
-    public function setId($id)
+    public function find($id)
     {
-        $this->id = $id;
-        return $this;
+        // Ici on créer la requete SQL qui va récupérer le product en fonction de son id
+        $sql = "SELECT * FROM brand WHERE id = " . $id;
+
+        // Ici $pdo est un objet de la classe Databse (Utils/Database.php)
+        // $pdo va me permettre d'executer mes requetes sql
+        $pdo = Database::getPDO();
+
+        // ici j'execute ma requete sql ($sql) et je stock le resultat de cette requete dans $pdoStatement
+        $pdoStatement = $pdo->query($sql);
+
+        // Je veux récuperer UN objet Product, PDO le fait pour moi => fetchObject (fetch qu'une seule fois + converti en objet de la classe 'Product' donc le model Product)
+        $product = $pdoStatement->fetchObject('Brand');
+
+        return $product;
     }
 
+    /**
+     * Get the value of name
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * Set the value of name
+     *
+     * @return  self
+     */
     public function setName($name)
     {
         $this->name = $name;
-        return $this;
-    }
-
-    public function getCreatedAt()
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt($created_at)
-    {
-        $this->created_at = $created_at;
-        return $this;
-    }
-
-    public function getUpdatedAt()
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt($updated_at)
-    {
-        $this->updated_at = $updated_at;
-        return $this;
-    }
-
-    public function findAll()
-    {
-        // Connexion à la base de données en utilisant la classe Database
-        $pdo = Database::getPDO();
-
-        // Créer la bonne requete SQL
-        $sql = "SELECT * FROM brand";
-
-        // On va devoir l'exécuter
-        $pdoStatement = $pdo->query($sql);
-        if ($pdoStatement === false) {
-            exit("Problème lors de la récupération de la liste des marques");
-        }
-
-        // On récupèrera le résultat sous forme d'objets
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'Brand');
-
-        // On retournera le résultat
-        return $results;
-    }
-    
-    public function find($id)
-    {
-        $pdo = Database::getPDO();
-
-        $sql = "SELECT * FROM brand WHERE id = $id";
-
-        $pdoStatement = $pdo->query($sql);
-        if ($pdoStatement === false) {
-            exit("Problème lors de la récupération de la marque n°$id");
-        }
-
-        $result = $pdoStatement->fetchObject('Brand');
-
-        return $result;
     }
 }
