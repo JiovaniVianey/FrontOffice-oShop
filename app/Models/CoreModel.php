@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Models;
+
 // Modele de base : c'est la classe mère dont vont hériter TOUS les models
 // Cette classe n'est pas destinée à être instancié, mais seulement à être héritée
 class CoreModel

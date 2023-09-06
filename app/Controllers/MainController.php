@@ -1,7 +1,15 @@
 <?php
 
+namespace App\Controllers;
+
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Type;
+
 class MainController extends CoreController
 {
+
     public function test()
     {
         $brandModel = new Brand(); // peut modifier Brand avec les autres nom de model pour tester
@@ -10,7 +18,6 @@ class MainController extends CoreController
         dump($list);
         dump($elem);
     }
-
     /**
      * Affiche la page d'accueil du site
      */
@@ -27,6 +34,7 @@ class MainController extends CoreController
      */
     public function legalMentions()
     {
+        // Affiche la vue dans le dossier views
         $this->show('mentions');
     }
 }

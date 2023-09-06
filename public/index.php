@@ -3,20 +3,8 @@
 // Ici j'inclus le fichier autoload.php car c'est grâce à ce fichier que je vais pouvoir inclure TOUTES mes dépendances composer (donc ce qu'il y a dans le dossier vendor)
 require_once __DIR__ . "/../vendor/autoload.php";
 
-// On inclus la BDD
-require_once __DIR__ . "/../app/utils/Database.php";
-
-// On inclus les models
-require_once __DIR__ . "/../app/Models/CoreModel.php";
-require_once __DIR__ . "/../app/Models/Brand.php";
-require_once __DIR__ . "/../app/Models/Product.php";
-require_once __DIR__ . "/../app/Models/Category.php";
-require_once __DIR__ . "/../app/Models/Type.php";
-
-// On inclus le controller pour pouvoir l'utiliser
-require_once __DIR__ . "/../app/Controllers/CoreController.php";
-require_once __DIR__ . "/../app/Controllers/MainController.php";
-require_once __DIR__ . "/../app/Controllers/CatalogController.php";
+use App\Controllers\CatalogController;
+use App\Controllers\MainController;
 
 // Je créer une instance de AltoRouter (la librairie que j'ai installé)
 $router = new AltoRouter();
@@ -26,31 +14,39 @@ $router = new AltoRouter();
 $router->setBasePath($_SERVER['BASE_URI']); // Je définis le chemin de base => ce par quoi mes routes vont commencer (localhost/.../public)
 
 // Ici, je créer mes routes (https://altorouter.com/usage/mapping-routes.html)
+
+// Ci dessous je dump(j'affiche) CatalogController::class
+// CatalogController::class => c'est le nom complet de la classe CatalogController, cad que ca va afficher le namespace de cette classe + le nom de la classe => App\Controllers\CatalogController
+var_dump(MainController::class);
 $router->addRoutes(array(
     array('GET', '/', [
-        'controller' => 'MainController', // Dans quel controller ?
+        'controller' => MainController::class, // Dans quel controller ?
         'action' => 'home' // Quelle méthode dans ce controller ?
     ], 'home'),
     array('GET', '/mentions-legales', [
-        'controller' => 'MainController',
+        'controller' => MainController::class, // le namespace nom de la classe + le nom de la classe (concatenation) 
         'action' => 'legalMentions'
     ], 'legal-mentions'),
     array('GET', '/catalogue/categorie/[i:id]', [
-        'controller' => 'CatalogController',
+        'controller' => CatalogController::class,
         'action' => 'category'
     ], 'catalog-category'),
     array('GET', '/catalogue/type/[i:id]', [
-        'controller' => 'CatalogController',
+        'controller' => CatalogController::class,
         'action' => 'type'
     ], 'catalog-type'),
     array('GET', '/catalogue/marque/[i:id]', [
-        'controller' => 'CatalogController',
+        'controller' => CatalogController::class,
         'action' => 'brand'
     ], 'catalog-brand'),
     array('GET', '/catalogue/produit/[i:id]', [
-        'controller' => 'CatalogController',
+        'controller' => CatalogController::class,
         'action' => 'product'
-    ], 'catalog-product')
+    ], 'catalog-product'),
+    array('GET', '/test', [
+        'controller' => MainController::class,
+        'action' => 'test'
+    ])
 ));
 
 // Ici on check si la route sur laquelle on est a bien été mappé
@@ -58,7 +54,7 @@ $router->addRoutes(array(
 // La valeur de retour de $router->match() sera egal a false si la route vers laquelle on fait une requete http n'existe pas (n'a pas été routé)
 // Elle sera egale a un tableau associatif avec 3 clé target, params et name si la route existe
 $match = $router->match();
-dump($match);
+// dump($match);
 
 // Pour vérifier si la route existe bien
 if ($match != false) { // Ici je verifie si $match n'est pas = false

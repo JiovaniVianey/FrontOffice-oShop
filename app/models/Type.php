@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Models;
+
+use App\Utils\Database;
+use PDO; // on utilise la classe PDO dont le namespace a été défini
+
 class Type extends CoreModel
 {
     private $name;
@@ -13,7 +18,7 @@ class Type extends CoreModel
         $sql = "SELECT * FROM type";
         $pdo = Database::getPDO();
         $pdoStatement = $pdo->query($sql);
-        $products = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'Type');
+        $products = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Type::class);
 
         return $products;
     }
@@ -35,7 +40,7 @@ class Type extends CoreModel
         $pdoStatement = $pdo->query($sql);
 
         // Je veux récuperer UN objet Product, PDO le fait pour moi => fetchObject (fetch qu'une seule fois + converti en objet de la classe 'Product' donc le model Product)
-        $product = $pdoStatement->fetchObject('Type');
+        $product = $pdoStatement->fetchObject(Type::class);
 
         return $product;
     }

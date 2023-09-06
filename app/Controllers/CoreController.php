@@ -1,5 +1,12 @@
 <?php
 
+namespace App\Controllers;
+
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Type;
+
 class CoreController
 {
     /**
@@ -9,19 +16,17 @@ class CoreController
     public function show($viewName, $viewData = [])
     {
         $absoluteURL = $_SERVER['BASE_URI'];
-
         global $router;
-
-        // Ci dessous je créer une instance du model Category, Type et Brand
-        $categoryModel = new Category();
         $typeModel = new Type();
+        $types = $typeModel->findAll();
         $brandModel = new Brand();
-        $productModel = new Product();
-
+        $brands = $brandModel->findAll();
+        // dump($types);
+        // Ci dessous je créer une instance du model Category
+        $categoryModel = new Category();
         // Ci dessous j'execute la methode findAll pour récupérer toutes les categories depuis la bdd
         $categories = $categoryModel->findAll();
-        $types = $typeModel->findAll();
-        $brands = $brandModel->findAll();
+        // dump($categories);
 
         require_once __DIR__ . "/../views/partials/header.tpl.php";
         require_once __DIR__ . "/../views/$viewName.tpl.php";

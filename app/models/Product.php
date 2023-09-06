@@ -1,280 +1,244 @@
 <?php
 
-class Product
+/**
+ * Model Product => lié à la table product en bdd
+ * Il faut que la classe ait le meme nom que le fichier et premiere lettre en majuscule
+ */
+
+namespace App\Models;
+
+use App\Utils\Database;
+use PDO; // on utilise la classe PDO dont le namespace a été défini
+
+class Product extends CoreModel
 {
-    /** @var int */
-    private $id;
-
-    /** @var string */
+    // ces propriétés doivent avoir exactement le meme nom que leur homologue en BDD
     private $name;
-
     private $description;
-
     private $picture;
-
     private $price;
-
     private $rate;
-
     private $status;
-
-    private $created_at;
-
-    private $updated_at;
-
     private $brand_id;
-
     private $category_id;
-
     private $type_id;
 
-    public function getId()
+    /**
+     * Récupère tous les produits (table product) depuis la bdd
+     */
+    public function findAll()
     {
-        return $this->id;
+        // Ici on créer la requete SQL qui va récupérer tous les products
+        $sql = "SELECT * FROM product";
+
+        // Ici $pdo est un objet de la classe Databse (Utils/Database.php)
+        // $pdo va me permettre d'executer mes requetes sql
+        $pdo = Database::getPDO();
+
+        // ici j'execute ma requete sql ($sql) et je stock le resultat de cette requete dans $pdoStatement
+        $pdoStatement = $pdo->query($sql);
+
+        // Pour l'instant $pdoStatement n'est pas une liste d'objets Product, pour transformer $pdoStatement en liste d'objet Product (model Product) => fetchAll
+        //fetchAll prend 2 param
+        // 1er = En quoi on veut convertir le resultat => ici en objets
+        // 2eme = Objets de quelle classe ? => La classe Product (le model ou on est actuellement)
+        $products = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Product::class);
+
+        // On retourne le tableau d'objets Products
+        return $products;
     }
 
-    public function setId($id)
+    /**
+     * Récupère un seul produit en fonction de son id
+     */
+    public function find($id)
     {
-        $this->id = $id;
-        return $this;
+        // Ici on créer la requete SQL qui va récupérer le product en fonction de son id
+        $sql = "SELECT * FROM product WHERE id = " . $id;
+
+        // Ici $pdo est un objet de la classe Databse (Utils/Database.php)
+        // $pdo va me permettre d'executer mes requetes sql
+        $pdo = Database::getPDO();
+
+        // ici j'execute ma requete sql ($sql) et je stock le resultat de cette requete dans $pdoStatement
+        $pdoStatement = $pdo->query($sql);
+
+        // Je veux récuperer UN objet Product, PDO le fait pour moi => fetchObject (fetch qu'une seule fois + converti en objet de la classe 'Product' donc le model Product)
+        $product = $pdoStatement->fetchObject(Product::class); // Product::class pour mettre le chemin complet (namespace + nomdeclasse)
+
+        return $product;
     }
 
+    public function findAllByCategory($id)
+    {
+        $sql = "SELECT * FROM product WHERE category_id = $id";
+        $pdo = Database::getPDO();
+        $pdoStatement = $pdo->query($sql);
+        $products = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Product::class);
+
+        return $products;
+    }
+
+    public function findAllByBrand($id)
+    {
+        $sql = "SELECT * FROM product WHERE brand_id = $id";
+        $pdo = Database::getPDO();
+        $pdoStatement = $pdo->query($sql);
+        $products = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Product::class);
+
+        return $products;
+    }
+
+    public function findAllByType($id)
+    {
+        $sql = "SELECT * FROM product WHERE type_id = $id";
+        $pdo = Database::getPDO();
+        $pdoStatement = $pdo->query($sql);
+        $products = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Product::class);
+
+        return $products;
+    }
+
+
+    /**
+     * Get the value of name
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * Set the value of name
+     *
+     * @return  self
+     */
     public function setName($name)
     {
         $this->name = $name;
-        return $this;
     }
 
+    /**
+     * Get the value of description
+     */
     public function getDescription()
     {
         return $this->description;
     }
 
+    /**
+     * Set the value of description
+     *
+     * @return  self
+     */
     public function setDescription($description)
     {
         $this->description = $description;
-        return $this;
     }
 
+    /**
+     * Get the value of picture
+     */
     public function getPicture()
     {
         return $this->picture;
     }
 
-    public function setPicture($picture)
-    {
-        $this->picture = $picture;
-        return $this;
-    }
-
+    /**
+     * Get the value of price
+     */
     public function getPrice()
     {
         return $this->price;
     }
 
+    /**
+     * Set the value of price
+     *
+     * @return  self
+     */
     public function setPrice($price)
     {
         $this->price = $price;
-        return $this;
     }
 
+    /**
+     * Get the value of rate
+     */
     public function getRate()
     {
         return $this->rate;
     }
 
-    public function setRate($rate)
-    {
-        $this->rate = $rate;
-        return $this;
-    }
-
+    /**
+     * Get the value of status
+     */
     public function getStatus()
     {
         return $this->status;
     }
 
+    /**
+     * Set the value of status
+     *
+     * @return  self
+     */
     public function setStatus($status)
     {
         $this->status = $status;
-        return $this;
     }
 
-    public function getCreatedAt()
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt($created_at)
-    {
-        $this->created_at = $created_at;
-        return $this;
-    }
-
-    public function getUpdatedAt()
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt($updated_at)
-    {
-        $this->updated_at = $updated_at;
-        return $this;
-    }
-
-    public function getBrandId()
+    /**
+     * Get the value of brand_id
+     */
+    public function getBrand_id()
     {
         return $this->brand_id;
     }
 
-    public function setBrandId($brand_id)
+    /**
+     * Set the value of brand_id
+     *
+     * @return  self
+     */
+    public function setBrand_id($brand_id)
     {
         $this->brand_id = $brand_id;
-        return $this;
     }
 
-    public function getCategoryId()
+    /**
+     * Get the value of category_id
+     */
+    public function getCategory_id()
     {
         return $this->category_id;
     }
 
-    public function setCategoryId($category_id)
+    /**
+     * Set the value of category_id
+     *
+     * @return  self
+     */
+    public function setCategory_id($category_id)
     {
         $this->category_id = $category_id;
-        return $this;
     }
 
-    public function getTypeId()
+    /**
+     * Get the value of type_id
+     */
+    public function getType_id()
     {
         return $this->type_id;
     }
 
-    public function setTypeId($type_id)
+    /**
+     * Set the value of type_id
+     *
+     * @return  self
+     */
+    public function setType_id($type_id)
     {
         $this->type_id = $type_id;
-        return $this;
-    }
-
-    /**
-     * Retourne la liste de tous les produits de la BDD
-     *
-     * @return Product[]
-     */
-    public function findAll()
-    {
-        // Connexion à la base de données en utilisant la classe Database
-        $pdo = Database::getPDO();
-
-        // Créer la bonne requete SQL
-        $sql = "SELECT * FROM product";
-
-        // On va devoir l'exécuter
-        $pdoStatement = $pdo->query($sql);
-        if ($pdoStatement === false) {
-            exit("Problème lors de la récupération de la liste des produits");
-        }
-
-        // On récupèrera le résultat sous forme d'objets
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'Product');
-
-        // On retournera le résultat
-        return $results;
-    }
-
-    /**
-     * Retourne un produit spécifique via son id dans la BDD
-     *
-     * @param int $id
-     *
-     * @return Product
-     */
-    public function find($id)
-    {
-        $pdo = Database::getPDO();
-
-        $sql = "SELECT * FROM product WHERE id = $id";
-
-        $pdoStatement = $pdo->query($sql);
-        if ($pdoStatement === false) {
-            exit("Problème lors de la récupération du produit n°$id");
-        }
-
-        $result = $pdoStatement->fetchObject('Product');
-
-        return $result;
-    }
-
-    /**
-     * Retourne un produit avec une catégorie spécifique via son id dans la BDD
-     *
-     * @param int $id
-     *
-     * @return Product[]
-     */
-    public function findCategory($id)
-    {
-        $pdo = Database::getPDO();
-
-        $sql = "SELECT * FROM product WHERE category_id = $id";
-
-        $pdoStatement = $pdo->query($sql);
-        if ($pdoStatement === false) {
-            exit("Problème lors de la récupération du produit n°$id");
-        }
-
-        $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'Product');
-
-        return $result;
-    }
-
-    /**
-     * Retourne un produit avec un type spécifique via son id dans la BDD
-     *
-     * @param int $id
-     *
-     * @return Product[]
-     */
-    public function findType($id)
-    {
-        $pdo = Database::getPDO();
-
-        $sql = "SELECT * FROM product WHERE type_id = $id";
-
-        $pdoStatement = $pdo->query($sql);
-        if ($pdoStatement === false) {
-            exit("Problème lors de la récupération du produit n°$id");
-        }
-
-        $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'Product');
-
-        return $result;
-    }
-
-    /**
-     * Retourne un produit avec un type spécifique via son id dans la BDD
-     *
-     * @param int $id
-     *
-     * @return Product[]
-     */
-    public function findBrand($id)
-    {
-        $pdo = Database::getPDO();
-
-        $sql = "SELECT * FROM product WHERE brand_id = $id";
-
-        $pdoStatement = $pdo->query($sql);
-        if ($pdoStatement === false) {
-            exit("Problème lors de la récupération du produit n°$id");
-        }
-
-        $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'Product');
-
-        return $result;
     }
 }
