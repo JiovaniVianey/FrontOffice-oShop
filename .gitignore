@@ -1,4 +1,4 @@
 import_trello.php
 import-external-repo.sh
 /vendor/
-/views/config.ini
+/app/config.ini
